@@ -1,9 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_falles_flutter/widgets/image_logo.dart';
 import '../themes/app_colors.dart';
+import 'home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool get _isButtonEnabled =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_updateState);
+    _passwordController.addListener(_updateState);
+  }
+
+  void _updateState() => setState(() {});
+
+  void _handleLogin() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +89,7 @@ class LoginScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         hintText: 'Email',
                         prefixIcon: const Icon(Icons.email_outlined),
@@ -64,6 +100,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: 'Contraseña',
@@ -77,6 +114,7 @@ class LoginScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
+                        onPressed: _isButtonEnabled ? _handleLogin : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
@@ -84,7 +122,6 @@ class LoginScreen extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
-                        onPressed: () {},
                         child: const Text(
                           'Iniciar sesión',
                           style: TextStyle(
