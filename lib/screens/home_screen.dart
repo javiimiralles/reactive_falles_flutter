@@ -44,6 +44,102 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+ void showFallaModal(BuildContext context, dynamic falla) {
+  final props = falla['properties'];
+  String imageUrl = props['boceto'] ?? '';
+  imageUrl = imageUrl.replaceFirst('http:', 'https:');
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(25),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, 2),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (imageUrl.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      imageUrl,
+                      width: 180,
+                      height: 180,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.image, size: 100),
+                    ),
+                  ),
+                const SizedBox(height: 15),
+                Text(
+                  props['nombre'] ?? 'Sin nombre',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF333333),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Fallera: ${props['fallera'] ?? 'No disponible'}\n'
+                  'Presidente: ${props['presidente'] ?? 'No disponible'}\n'
+                  'Sección: ${props['seccion'] ?? ''}\n'
+                  'Artista: ${props['artista'] ?? 'No disponible'}\n'
+                  'Lema: ${props['lema'] ?? 'No disponible'}\n'
+                  'Fundada en: ${props['anyo_fundacion'] ?? 'Desconocido'}\n'
+                  'Distintivo: ${props['distintivo'] ?? 'Ninguno'}\n'
+                  'Dirección: ${props['direccion'] ?? 'No disponible'}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF555555),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF800000),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  child: const Text(
+                    'Cerrar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+
   Widget buildFallaItem(dynamic falla) {
     final props = falla['properties'];
     String imageUrl = props['boceto'] ?? '';
@@ -61,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       child: ListTile(
+        onTap: () => showFallaModal(context, falla),
         contentPadding: const EdgeInsets.all(10),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(8),
