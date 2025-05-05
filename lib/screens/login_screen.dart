@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ImageLogo(),
                         SizedBox(height: 16),
                         Text(
-                          'Bienvenido',
+                          'FallasFinder',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
